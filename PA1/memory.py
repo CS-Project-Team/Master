@@ -1,4 +1,4 @@
-#!/usr/bin python
+#!/usr/bin/python
 # Parameters: <read/write> <is_random> <block_size> <n_threads>
 import sys
 import threading
@@ -22,23 +22,23 @@ class memory(threading.Thread):
         self.in_memory = ['M']*MAX_SIZE
             
     # This function reads random data (random access) from the array in memory.        
-    def r_read(self):
+    def memory_read_random(self):
         for var in sample(xrange(MAX_SIZE),self.blks):
             tmp = self.in_memory[var]
     
     # This function writes into random position of the array in memory (random writes).
-    def r_write(self):
+    def memory_write_random(self):
         tmp = 'Z'
         for var in sample(xrange(MAX_SIZE),self.blks):
             self.in_memory[var] = tmp
     
     # This function reads sequentially from the memory array (sequential access).
-    def read(self):
+    def memory_read_sequential(self):
         for var in xrange(self.blks):
             tmp = self.in_memory[var]
     
     # This function writes sequentially from the memory (sequential writes).
-    def write(self):
+    def memory_write_sequential(self):
         tmp = 'X'
         for var in xrange(self.blks):
             self.in_memory[var] = tmp
@@ -48,7 +48,7 @@ class memory(threading.Thread):
         if self.ran == 1:
             if self.cmd == 'read':
                 r_read_start = datetime.now()
-                self.r_read()
+                self.memory_read_random()
                 r_read_stop = datetime.now() 
                 diff = r_read_stop - r_read_start
                 TIMING.append(diff.total_seconds()) 
@@ -57,7 +57,7 @@ class memory(threading.Thread):
                 print 'Memory Bandwidth for current thread: %f Bytes/Sec' % BANDWIDTH[-1] 
             else:
                 r_write_start = datetime.now()
-                self.r_write()
+                self.memory_write_random()
                 r_write_stop = datetime.now()  
                 diff = r_write_stop - r_write_start
                 TIMING.append(diff.total_seconds())  
@@ -67,7 +67,7 @@ class memory(threading.Thread):
         else:
             if self.cmd == 'read':
                 read_start = datetime.now()
-                self.read()
+                self.memory_read_sequential()
                 read_stop = datetime.now()  
                 diff = read_stop - read_start
                 TIMING.append(diff.total_seconds())
@@ -76,7 +76,7 @@ class memory(threading.Thread):
                 print 'Memory Bandwidth for current thread: %f Bytes/Sec' % BANDWIDTH[-1] 
             else:       
                 write_start = datetime.now()
-                self.write()
+                self.memory_write_sequential()
                 write_stop = datetime.now()  
                 diff = write_stop - write_start
                 TIMING.append(diff.total_seconds())  
@@ -85,24 +85,22 @@ class memory(threading.Thread):
                 print 'Memory Bandwidth for current thread: %f Bytes/Sec' % BANDWIDTH[-1] 
     
 if __name__ == '__main__':
-    Threads = []
     if len(sys.argv) != 5:
         print 'Usage: memory.py <read/write> <random/not_random> <blocks in bytes> <thread count>'
         sys.exit(1)
     else:
-        mem = memory(sys.argv[1].lower(),sys.argv[2],sys.argv[3])
         for i in range(int(sys.argv[4])):
+            mem = memory(sys.argv[1].lower(),sys.argv[2],sys.argv[3])
             print '\nThread %d Started' % (i+1)
             mem.start()
-            Threads.append(mem)
             mem.join()
 
         sum_ = 0
         avg_bw = 0  
-        for val in range(1,len(int(sys.argv[4])+1)):
+        for val in range(1,int(sys.argv[4])+1):
             sum_ += TIMING[-(val)]
             avg_bw += BANDWIDTH[-(val)]
 
-        print 'TOTAL NUMBER OF THREADS:',sys.argv[4]
+        print '\nTOTAL NUMBER OF THREADS:',sys.argv[4]
         print 'TOTAL TIME TAKEN       :',sum_
-        print 'Averange Bandwidth is  :' %  (avg_bw /sys.argv[4])
+        print 'Averange Bandwidth is  : %f Bytes/Sec\n' %  (avg_bw /float(sys.argv[4]))
