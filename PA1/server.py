@@ -6,6 +6,7 @@ HOSTNAME = 'localhost'
 PORT = 3000             # Random port 
 BUFFER = 1024
 
+# Handling Multiple Clients
 class multiple_clients(threading.Thread):
     def __init__(self,client):
         super(multiple_clients,self).__init__()
