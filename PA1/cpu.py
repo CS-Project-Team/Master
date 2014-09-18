@@ -78,7 +78,6 @@ def main(argv):
 				sys.exit(2)
 			numThreads = arg
 	
-	print "\n\n========== CPU PERFORMANCE BECHMARKING ==========\n"
 	n = int((N_OPERATIONS)/int(numThreads))
 
 	#Testing time for an empty loop
@@ -120,8 +119,10 @@ if __name__ == "__main__":
 	if len(sys.argv) != 3:
 		print 'Usage: cpu.py -t <number of thread>'
 		sys.exit(1)
+	
+	print "\n\n========== CPU PERFORMANCE BECHMARKING ==========\n"
 	for i in range(0,N_TESTS):
-		print "----- Running test #%s" % (i)
+		print "\n----- Running test #%s -----" % (i+1)
 		main(sys.argv[1:])
 	
 	sum_int = 0
@@ -131,7 +132,7 @@ if __name__ == "__main__":
 	sd_int = stand_deviation(TIME_INT, avg_int)
 	sd_float = stand_deviation(TIME_FL, avg_float)
 	
-        print "\n======= SUMMARY OF CPU PERFORMANCE ======="
+        print "\n========== SUMMARY OF CPU PERFORMANCE ============"
         print "Tests                                    : %s" % (N_TESTS)
 	print "Number of threads                        : %s" % (sys.argv[2])
         print "Average time for integer operations      : %ss" % (avg_int)
@@ -140,5 +141,5 @@ if __name__ == "__main__":
         print "Average time for float operations        : %ss" % (avg_float)
         print "Standard deviation for float operations  : %ss" % (sd_float)
 	print "Average float operations per second      : %s GFLOPS" %(calc_gops(avg_float)) 
-        print "=====================================\n\n"
+        print "====================================================\n\n"
 
