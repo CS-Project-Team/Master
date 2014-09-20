@@ -5,30 +5,34 @@ import time
 import threading
 import sys, getopt
 import math
+import resource
 
 #Number of operations that will run on each test
 N_OPERATIONS = 10**8
 #Number of tests for each operation type
-N_TESTS = 3
+N_TESTS = 1
 #Execution time for each test
 TIME_INT = []
 TIME_FL = []
 
+def cpu_time():
+        return resource.getrusage(resource.RUSAGE_SELF)[0]
+
 def add_integer( thread, n ):
-	count = 0
-	startTime = time.clock()
+	count = 1
+	#start = cpu_time()
 	for i in xrange(n):	
 		count += 1
-	totalTime = time.clock() - startTime
-	#print "%s: %s" % (thread, totalTime)
+	#total = cpu_time() - start
+	#print "%s: %s (cpu_time)" % (thread, total)
 
 def add_float( thread, n ):
         count = 0.00
 	float_increment = 1.07
-        startTime = time.clock()
+        #startTime = time.clock()
         for i in xrange(n):
                 count += float_increment
-        totalTime = time.clock() - startTime
+        #totalTime = time.clock() - startTime
         #print "%s: %s" % (thread, totalTime)
 
 def average( values ):
@@ -56,7 +60,7 @@ class myThread(threading.Thread):
 		self.opType = opType
 		self.n = n
 	def run(self):
-		print "Started %s %s operations on %s" % (self.n,self.opType,self.name)
+		#print "Started %s %s operations on %s" % (self.n,self.opType,self.name)
 		if self.opType == "integer":
 			add_integer(self.name, self.n)
 		else:
@@ -87,7 +91,7 @@ def main(argv):
         loopTime = time.clock() - startTime
 
 	threads = []
-	startTime = time.clock()
+	startTime = cpu_time()
 	for i in range(0, int(numThreads)):
 		thread = myThread(i, "T"+str(i),"integer", n)
 		thread.start()
@@ -95,13 +99,13 @@ def main(argv):
 
 	for t in threads:
 		t.join()
-	totalTime = time.clock() - startTime - loopTime
+	totalTime = cpu_time() - startTime - loopTime
 	TIME_INT.append(totalTime);
 	giops = n / (totalTime*(10**9))
 	print "   Total time : %s  ### GIOPS : %s" % (totalTime, giops)
 
 	threads = []
-        startTime = time.clock()
+        startTime = cpu_time()
         for i in range(0, int(numThreads)):
                 thread = myThread(i, "T"+str(i), "float", n)
                 thread.start()
@@ -109,7 +113,7 @@ def main(argv):
 
         for t in threads:
                 t.join()
-        totalTime = time.clock() - startTime - loopTime
+        totalTime = cpu_time() - startTime - loopTime
 	TIME_FL.append(totalTime)
         flops = n / (totalTime*(10**9))
         print "   Total time : %s  ### FLOPS : %s" % (totalTime, flops)
