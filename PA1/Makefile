@@ -1,13 +1,14 @@
 .PHONY: all clean
 CCC=g++
-CCFLAGS=-pthread -std=c++11 -Wl,--no-as-needed 
+CCFLAGS=-Wl,--no-as-needed -std=c++11 -pthread 
 OBJECTS=cpu 
 
 all: $(OBJECTS)
 
 run: all
-	##./cpu
+	##./cpu 2
 
 cpu: cpu.cpp
-	$(CCC) cpu.cpp -o cpu $(CCFLAGS)
+	$(CCC) $(CCFLAGS) cpu.cpp -o cpu
+
 
