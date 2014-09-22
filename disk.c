@@ -61,16 +61,16 @@ int main(int argc, char *argv[]) {
 	ThreadData empty_loop;
 	pthread_t empty_loop_id;
 	int random_int;
-
+	int re;
 	
 	srand(time(NULL));	
 	random_int = rand();
 
 	/* Detect mode betweem Write/Sequential, Write/Random, Read/Sequential, Read/Random */
 	index = detect_mode(mode);
-	printf("BLOCKSIZE : %d",blocksize);
+	printf("\nBLOCKSIZE : %d B\n",blocksize);
 	printf("THREADS   : %d",nb_threads);
-	printf("\n=======================================\n");
+	printf("\n=======================================\n\n");
 
 	/* Calculating empty loop_size latency*/
 	empty_loop.blocksize = blocksize/nb_threads;
@@ -107,11 +107,14 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 		if(re == -1){
-			printf("Error creating thread %d",i);
+			printf("Error creating thread %d",i+1);
+		}
 		else{
-			printf("Thread %d/%d created.",i,nb_threads);
+			printf("Thread %d/%d created.\n",i+1,nb_threads);
 		}
 	}
+	
+	printf("---------------------------------------\n\n");
 	
 	/* Wait for all the threads to complete */
 	for(i=0; i < nb_threads; i++){
@@ -125,16 +128,16 @@ int main(int argc, char *argv[]) {
 		throughput = (thread[i].blocksize/1000000.0)/latency;
 		avg_latency +=latency;	
 		total_throughput += throughput;
-		printf("\nThread      : %d\n", i+1);
+		printf("Thread      : %d\n", i+1);
 		printf("Blocksize   : %d B\n", thread[i].blocksize);
 		printf("Latency     : %.5f ms\n",(latency*1000));
-		printf("Throughput  : %.2f MB/s\n",throughput);
+		printf("Throughput  : %.2f MB/s\n\n",throughput);
 	}
 
 	/* Calculating average throughput and latency */
 	avg_latency /= nb_threads;
 	avg_throughput = total_throughput/nb_threads;	
-	printf("\n---------------------------------------\n");
+	printf("---------------------------------------\n");
 	printf("Average latency     : %.5f ms\n", (avg_latency*1000));
 	printf("Average throughput  : %.5f ms\n", avg_throughput);
 	printf("Total throughput    : %.2f MB/s", total_throughput);
@@ -226,19 +229,19 @@ int detect_mode(char *mode){
 	printf("\n=======================================\n");
 	if (strcmp(mode,"ws") == 0){
 		index = 0;
-		printf("MODE    : Write / Sequential");
+		printf("MODE      : Write / Sequential");
 	}
 	else if (strcmp(mode, "wr") == 0){
 		index = 1;
-		printf("MODE    : Write / Random");
+		printf("MODE      : Write / Random");
 	}
 	else if (strcmp(mode, "rs") == 0){
 		index = 2;
-		printf("MODE    : Read / Sequential");
+		printf("MODE      : Read / Sequential");
 	}
 	else if (strcmp(mode, "rr") == 0){
 		index = 3;
-		printf("MODE    : Read / Random");		
+		printf("MODE      : Read / Random");		
 	}
 	else{
 		fprintf(stderr,"Usage is ./test <ws,wr,rs,rr><nb_threads>");
