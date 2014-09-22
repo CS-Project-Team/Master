@@ -14,12 +14,15 @@ class client(threading.Thread):
         super(client,self).__init__()
         self.client = None
         self.server_addr = (SERVER_HOST,SERVER_PORT)
-        self.packet = 'Hello'
+        self.packet_size = 65536
+        # The packet size is varied depending on the user selection
+        # Current sizes are 1B, 1KB and 64KB
+        self.packet = ['A','A'*1024,'A'*1024*64]
     
     def send_data(self,data):
         try:
             start_packet_time = datetime.now() 
-            self.client.send(data)
+            self.client.sendall(data)
             stop_packet_time = datetime.now()
         except Exception as e:
             print 'Could not send the data.!!'
@@ -44,9 +47,10 @@ class client(threading.Thread):
                 
         return (data,(stop_packet_time - start_packet_time))  
             
-    def process_data(self,data):
+    def process_data(self,data,packet_size):
         try:
             self.client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.client.connect(self.server_addr)
             send_time = self.send_data(data)
             receive_time = self.receive_data()
@@ -62,13 +66,32 @@ class client(threading.Thread):
                
         finally:
             self.client.close()
-        
+        print 'Message from the server:', receive_time[0]
         print 'The time taken to send data:',send_time
-        print 'The time taken to receive data:',receive_time
-        
+        print 'The time taken to receive data:',receive_time[1]
+        print 'Packet Size transmitted:',packet_size
+        print 'Send Time in microseconds:',send_time.microseconds
+        print 'The Bandwidth for the application is %d MBytes/Sec' % (((self.packet_size/send_time.microseconds)*(pow(10,6)))/(1024 * 1024))
+        print '*'*80
+
     def run(self):
+        possibilities = [1,2,3]
+        print '*'*80
         try:
-            self.process_data(self.packet)
+            while 1:
+                print '\nEnter the packet size:'
+                print 'Enter 1 for 1B'
+                print 'Enter 2 for 1KB'
+                print 'Enter 3 for 64KB\n'
+                option = raw_input()
+                if int(option) not in possibilities:
+                    print 'Invalid input.!!'
+                else:
+                    break    
+            data_to_send = self.packet[possibilities.index(int(option))]  
+            print '\nNumber of bytes to send:', len(data_to_send)  
+            self.process_data(data_to_send,len(data_to_send))
+
         except Exception as e:
             print 'Error processing the data..!!'
             print e.message
