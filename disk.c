@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 	pthread_t empty_loop_id;	
 	int random_int;
 	int re;
-	
+		
 	srand(time(NULL));	
 	random_int = rand()%(MAX_SIZE-blocksize);
 	
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
 		}
 		thread[i].random_int = random_int;
 		thread[i].diff = 0;
-
+		
 		/* Determining thread to be created (Write, Sequential, Sequential, Random) */
 		switch(index){	
 		case 0:
@@ -143,9 +143,9 @@ int main(int argc, char *argv[]) {
 	
 	/* Wait for all the threads to complete */
 	for(i=0; i < nb_threads; i++){
-		pthread_join(thread[i].thread_id, NULL);	
+		pthread_join(thread[i].thread_id, NULL);
 	}
-	sleep(2);
+	sleep(1);
 
 	/* Calculating and printing  throughput and latency for each thread */
 	for(i=0; i < nb_threads; i++){
