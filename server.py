@@ -109,9 +109,6 @@ if __name__ == '__main__':
     try:
         while 1:
             time.sleep(1)
-            print 'Enter the command you want to enter:'
-            command = raw_input()
-            print command
     except Exception as e:
         print e.message
     except KeyboardInterrupt:
