@@ -1,0 +1,1008 @@
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1 B
+Latency     : 0.01287 ms
+Throughput  : 0.08 MB/s
+
+---------------------------------------
+Average latency     : 0.01287 ms
+Average throughput  : 0.07767 ms
+Total throughput    : 0.08 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 0 B
+Latency     : 0.00286 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 2
+Blocksize   : 0 B
+Latency     : 0.00286 ms
+Throughput  : 0.00 MB/s
+
+---------------------------------------
+Average latency     : 0.00286 ms
+Average throughput  : 0.00000 ms
+Total throughput    : 0.00 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 0 B
+Latency     : 0.00715 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 2
+Blocksize   : 0 B
+Latency     : 0.00310 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 3
+Blocksize   : 0 B
+Latency     : 0.00191 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 4
+Blocksize   : 0 B
+Latency     : 0.00310 ms
+Throughput  : 0.00 MB/s
+
+---------------------------------------
+Average latency     : 0.00381 ms
+Average throughput  : 0.00000 ms
+Total throughput    : 0.00 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1000 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1000 B
+Latency     : 0.03409 ms
+Throughput  : 29.33 MB/s
+
+---------------------------------------
+Average latency     : 0.03409 ms
+Average throughput  : 29.33080 ms
+Total throughput    : 29.33 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1000 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 500 B
+Latency     : 0.02503 ms
+Throughput  : 19.97 MB/s
+
+Thread      : 2
+Blocksize   : 500 B
+Latency     : 0.01597 ms
+Throughput  : 31.30 MB/s
+
+---------------------------------------
+Average latency     : 0.02050 ms
+Average throughput  : 25.63683 ms
+Total throughput    : 51.27 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1000 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 250 B
+Latency     : 0.01907 ms
+Throughput  : 13.11 MB/s
+
+Thread      : 2
+Blocksize   : 250 B
+Latency     : 0.01097 ms
+Throughput  : 22.80 MB/s
+
+Thread      : 3
+Blocksize   : 250 B
+Latency     : 0.01192 ms
+Throughput  : 20.97 MB/s
+
+Thread      : 4
+Blocksize   : 250 B
+Latency     : 0.01097 ms
+Throughput  : 22.80 MB/s
+
+---------------------------------------
+Average latency     : 0.01323 ms
+Average throughput  : 19.91725 ms
+Total throughput    : 79.67 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1000000 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1000000 B
+Latency     : 21.61503 ms
+Throughput  : 46.26 MB/s
+
+---------------------------------------
+Average latency     : 21.61503 ms
+Average throughput  : 46.26411 ms
+Total throughput    : 46.26 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1000000 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 500000 B
+Latency     : 9.86886 ms
+Throughput  : 50.66 MB/s
+
+Thread      : 2
+Blocksize   : 500000 B
+Latency     : 10.18310 ms
+Throughput  : 49.10 MB/s
+
+---------------------------------------
+Average latency     : 10.02598 ms
+Average throughput  : 49.88270 ms
+Total throughput    : 99.77 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Sequential
+BLOCKSIZE : 1000000 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 250000 B
+Latency     : 5.57303 ms
+Throughput  : 44.86 MB/s
+
+Thread      : 2
+Blocksize   : 250000 B
+Latency     : 5.69201 ms
+Throughput  : 43.92 MB/s
+
+Thread      : 3
+Blocksize   : 250000 B
+Latency     : 5.74398 ms
+Throughput  : 43.52 MB/s
+
+Thread      : 4
+Blocksize   : 250000 B
+Latency     : 9.88483 ms
+Throughput  : 25.29 MB/s
+
+---------------------------------------
+Average latency     : 6.72346 ms
+Average throughput  : 39.39880 ms
+Total throughput    : 157.60 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1 B
+Latency     : 0.01311 ms
+Throughput  : 0.08 MB/s
+
+---------------------------------------
+Average latency     : 0.01311 ms
+Average throughput  : 0.07626 ms
+Total throughput    : 0.08 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 0 B
+Latency     : 0.01097 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 2
+Blocksize   : 0 B
+Latency     : 0.01001 ms
+Throughput  : 0.00 MB/s
+
+---------------------------------------
+Average latency     : 0.01049 ms
+Average throughput  : 0.00000 ms
+Total throughput    : 0.00 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 0 B
+Latency     : 0.07606 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 2
+Blocksize   : 0 B
+Latency     : 0.01216 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 3
+Blocksize   : 0 B
+Latency     : 0.01001 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 4
+Blocksize   : 0 B
+Latency     : 0.00906 ms
+Throughput  : 0.00 MB/s
+
+---------------------------------------
+Average latency     : 0.02682 ms
+Average throughput  : 0.00000 ms
+Total throughput    : 0.00 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1000 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1000 B
+Latency     : 0.03195 ms
+Throughput  : 31.30 MB/s
+
+---------------------------------------
+Average latency     : 0.03195 ms
+Average throughput  : 31.30078 ms
+Total throughput    : 31.30 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1000 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 500 B
+Latency     : 0.03004 ms
+Throughput  : 16.64 MB/s
+
+Thread      : 2
+Blocksize   : 500 B
+Latency     : 0.02003 ms
+Throughput  : 24.97 MB/s
+
+---------------------------------------
+Average latency     : 0.02503 ms
+Average throughput  : 20.80508 ms
+Total throughput    : 41.61 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1000 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 250 B
+Latency     : 0.02193 ms
+Throughput  : 11.40 MB/s
+
+Thread      : 2
+Blocksize   : 250 B
+Latency     : 0.01407 ms
+Throughput  : 17.77 MB/s
+
+Thread      : 3
+Blocksize   : 250 B
+Latency     : 0.01383 ms
+Throughput  : 18.08 MB/s
+
+Thread      : 4
+Blocksize   : 250 B
+Latency     : 0.01407 ms
+Throughput  : 17.77 MB/s
+
+---------------------------------------
+Average latency     : 0.01597 ms
+Average throughput  : 16.25535 ms
+Total throughput    : 65.02 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1000000 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1000000 B
+Latency     : 20.54691 ms
+Throughput  : 48.67 MB/s
+
+---------------------------------------
+Average latency     : 20.54691 ms
+Average throughput  : 48.66911 ms
+Total throughput    : 48.67 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1000000 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 500000 B
+Latency     : 10.25701 ms
+Throughput  : 48.75 MB/s
+
+Thread      : 2
+Blocksize   : 500000 B
+Latency     : 10.08606 ms
+Throughput  : 49.57 MB/s
+
+---------------------------------------
+Average latency     : 10.17153 ms
+Average throughput  : 49.16027 ms
+Total throughput    : 98.32 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Write / Random
+BLOCKSIZE : 1000000 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 250000 B
+Latency     : 5.09286 ms
+Throughput  : 49.09 MB/s
+
+Thread      : 2
+Blocksize   : 250000 B
+Latency     : 5.07903 ms
+Throughput  : 49.22 MB/s
+
+Thread      : 3
+Blocksize   : 250000 B
+Latency     : 5.15389 ms
+Throughput  : 48.51 MB/s
+
+Thread      : 4
+Blocksize   : 250000 B
+Latency     : 4.76694 ms
+Throughput  : 52.44 MB/s
+
+---------------------------------------
+Average latency     : 5.02318 ms
+Average throughput  : 49.81547 ms
+Total throughput    : 199.26 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1 B
+Latency     : 0.09012 ms
+Throughput  : 0.01 MB/s
+
+---------------------------------------
+Average latency     : 0.09012 ms
+Average throughput  : 0.01110 ms
+Total throughput    : 0.01 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 0 B
+Latency     : 0.00811 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 2
+Blocksize   : 0 B
+Latency     : 0.00215 ms
+Throughput  : 0.00 MB/s
+
+---------------------------------------
+Average latency     : 0.00513 ms
+Average throughput  : 0.00000 ms
+Total throughput    : 0.00 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 0 B
+Latency     : 0.00691 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 2
+Blocksize   : 0 B
+Latency     : 0.00215 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 3
+Blocksize   : 0 B
+Latency     : 0.00310 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 4
+Blocksize   : 0 B
+Latency     : 0.00286 ms
+Throughput  : 0.00 MB/s
+
+---------------------------------------
+Average latency     : 0.00376 ms
+Average throughput  : 0.00000 ms
+Total throughput    : 0.00 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1000 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1000 B
+Latency     : 0.04005 ms
+Throughput  : 24.97 MB/s
+
+---------------------------------------
+Average latency     : 0.04005 ms
+Average throughput  : 24.96610 ms
+Total throughput    : 24.97 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1000 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 500 B
+Latency     : 0.03099 ms
+Throughput  : 16.13 MB/s
+
+Thread      : 2
+Blocksize   : 500 B
+Latency     : 0.03600 ms
+Throughput  : 13.89 MB/s
+
+---------------------------------------
+Average latency     : 0.03350 ms
+Average throughput  : 15.01018 ms
+Total throughput    : 30.02 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1000 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 250 B
+Latency     : 0.02503 ms
+Throughput  : 9.99 MB/s
+
+Thread      : 2
+Blocksize   : 250 B
+Latency     : 0.01502 ms
+Throughput  : 16.64 MB/s
+
+Thread      : 3
+Blocksize   : 250 B
+Latency     : 0.01192 ms
+Throughput  : 20.97 MB/s
+
+Thread      : 4
+Blocksize   : 250 B
+Latency     : 0.01407 ms
+Throughput  : 17.77 MB/s
+
+---------------------------------------
+Average latency     : 0.01651 ms
+Average throughput  : 16.34362 ms
+Total throughput    : 65.37 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1000000 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1000000 B
+Latency     : 19.57512 ms
+Throughput  : 51.09 MB/s
+
+---------------------------------------
+Average latency     : 19.57512 ms
+Average throughput  : 51.08526 ms
+Total throughput    : 51.09 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1000000 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 500000 B
+Latency     : 10.10609 ms
+Throughput  : 49.48 MB/s
+
+Thread      : 2
+Blocksize   : 500000 B
+Latency     : 10.14304 ms
+Throughput  : 49.29 MB/s
+
+---------------------------------------
+Average latency     : 10.12456 ms
+Average throughput  : 49.38501 ms
+Total throughput    : 98.77 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Sequential
+BLOCKSIZE : 1000000 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 250000 B
+Latency     : 4.70901 ms
+Throughput  : 53.09 MB/s
+
+Thread      : 2
+Blocksize   : 250000 B
+Latency     : 4.78601 ms
+Throughput  : 52.24 MB/s
+
+Thread      : 3
+Blocksize   : 250000 B
+Latency     : 4.58097 ms
+Throughput  : 54.57 MB/s
+
+Thread      : 4
+Blocksize   : 250000 B
+Latency     : 5.55086 ms
+Throughput  : 45.04 MB/s
+
+---------------------------------------
+Average latency     : 4.90671 ms
+Average throughput  : 51.23422 ms
+Total throughput    : 204.94 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1 B
+Latency     : 0.04292 ms
+Throughput  : 0.02 MB/s
+
+---------------------------------------
+Average latency     : 0.04292 ms
+Average throughput  : 0.02330 ms
+Total throughput    : 0.02 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 0 B
+Latency     : 0.02289 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 2
+Blocksize   : 0 B
+Latency     : 0.01001 ms
+Throughput  : 0.00 MB/s
+
+---------------------------------------
+Average latency     : 0.01645 ms
+Average throughput  : 0.00000 ms
+Total throughput    : 0.00 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 0 B
+Latency     : 0.02289 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 2
+Blocksize   : 0 B
+Latency     : 0.01001 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 3
+Blocksize   : 0 B
+Latency     : 0.00906 ms
+Throughput  : 0.00 MB/s
+
+Thread      : 4
+Blocksize   : 0 B
+Latency     : 0.00906 ms
+Throughput  : 0.00 MB/s
+
+---------------------------------------
+Average latency     : 0.01276 ms
+Average throughput  : 0.00000 ms
+Total throughput    : 0.00 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1000 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1000 B
+Latency     : 0.04101 ms
+Throughput  : 24.39 MB/s
+
+---------------------------------------
+Average latency     : 0.04101 ms
+Average throughput  : 24.38549 ms
+Total throughput    : 24.39 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1000 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 500 B
+Latency     : 0.03600 ms
+Throughput  : 13.89 MB/s
+
+Thread      : 2
+Blocksize   : 500 B
+Latency     : 0.02193 ms
+Throughput  : 22.80 MB/s
+
+---------------------------------------
+Average latency     : 0.02897 ms
+Average throughput  : 18.34178 ms
+Total throughput    : 36.68 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1000 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 250 B
+Latency     : 0.03195 ms
+Throughput  : 7.83 MB/s
+
+Thread      : 2
+Blocksize   : 250 B
+Latency     : 0.01788 ms
+Throughput  : 13.98 MB/s
+
+Thread      : 3
+Blocksize   : 250 B
+Latency     : 0.01502 ms
+Throughput  : 16.64 MB/s
+
+Thread      : 4
+Blocksize   : 250 B
+Latency     : 0.01597 ms
+Throughput  : 15.65 MB/s
+
+---------------------------------------
+Average latency     : 0.02021 ms
+Average throughput  : 13.52516 ms
+Total throughput    : 54.10 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1000000 B
+THREADS   : 1
+=======================================
+
+Thread 1/1 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 1000000 B
+Latency     : 19.77301 ms
+Throughput  : 50.57 MB/s
+
+---------------------------------------
+Average latency     : 19.77301 ms
+Average throughput  : 50.57400 ms
+Total throughput    : 50.57 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1000000 B
+THREADS   : 2
+=======================================
+
+Thread 1/2 created.
+Thread 2/2 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 500000 B
+Latency     : 10.66613 ms
+Throughput  : 46.88 MB/s
+
+Thread      : 2
+Blocksize   : 500000 B
+Latency     : 10.71382 ms
+Throughput  : 46.67 MB/s
+
+---------------------------------------
+Average latency     : 10.68997 ms
+Average throughput  : 46.77303 ms
+Total throughput    : 93.55 MB/s
+---------------------------------------
+
+=======================================
+MODE      : Read / Random
+BLOCKSIZE : 1000000 B
+THREADS   : 4
+=======================================
+
+Thread 1/4 created.
+Thread 2/4 created.
+Thread 3/4 created.
+Thread 4/4 created.
+---------------------------------------
+
+Thread      : 1
+Blocksize   : 250000 B
+Latency     : 6.00815 ms
+Throughput  : 41.61 MB/s
+
+Thread      : 2
+Blocksize   : 250000 B
+Latency     : 4.45890 ms
+Throughput  : 56.07 MB/s
+
+Thread      : 3
+Blocksize   : 250000 B
+Latency     : 5.42498 ms
+Throughput  : 46.08 MB/s
+
+Thread      : 4
+Blocksize   : 250000 B
+Latency     : 5.41091 ms
+Throughput  : 46.20 MB/s
+
+---------------------------------------
+Average latency     : 5.32573 ms
+Average throughput  : 47.49096 ms
+Total throughput    : 189.96 MB/s
+---------------------------------------

@@ -21,6 +21,7 @@ for mode in $MODE; do
 			echo "     Number of threads: $threads"
 			sleep 2 
 			./disk $mode $blocksize $threads >> $REPORT_FILE
+			rm temp*
 		done
 		echo "     done."
 	done
@@ -28,7 +29,6 @@ for mode in $MODE; do
 done
 echo ""
 echo "Removing temporary files ..."
-rm temp*
 echo "done."
 echo ""
 echo "Disk Benchmarking ended successfully."
