@@ -10,14 +10,13 @@ SEND_TIMES = []
 RECEIVE_TIMES = []
 
 class client(threading.Thread):
-    def __init__(self):
+    def __init__(self,data_to_send,len_data):
         super(client,self).__init__()
         self.client = None
         self.server_addr = (SERVER_HOST,SERVER_PORT)
         self.packet_size = 65536
-        # The packet size is varied depending on the user selection
-        # Current sizes are 1B, 1KB and 64KB
-        self.packet = ['A','A'*1024,'A'*1024*64]
+        self.data_to_send = data_to_send
+        self.len_data = len_data
     
     def send_data(self,data):
         try:
@@ -75,22 +74,9 @@ class client(threading.Thread):
         print '*'*80
 
     def run(self):
-        possibilities = [1,2,3]
         print '*'*80
         try:
-            while 1:
-                print '\nEnter the packet size:'
-                print 'Enter 1 for 1B'
-                print 'Enter 2 for 1KB'
-                print 'Enter 3 for 64KB\n'
-                option = raw_input()
-                if int(option) not in possibilities:
-                    print 'Invalid input.!!'
-                else:
-                    break    
-            data_to_send = self.packet[possibilities.index(int(option))]  
-            print '\nNumber of bytes to send:', len(data_to_send)  
-            self.process_data(data_to_send,len(data_to_send))
+            self.process_data(self.data_to_send,self.len_data)
 
         except Exception as e:
             print 'Error processing the data..!!'
@@ -98,6 +84,45 @@ class client(threading.Thread):
             sys.exit(1)    
 
 if __name__ == '__main__':
-    cli = client()
-    cli.start()
-    cli.join() 
+    # The packet size is varied depending on the user selection
+    # Current sizes are 1B, 1KB and 64KB
+    packet = ['A','A'*1024,'A'*1024*64]
+    possibilities = [1,2,3]
+    try:
+        while 1:
+            print '\nEnter the packet size:'
+            print 'Enter 1 for 1B'
+            print 'Enter 2 for 1KB'
+            print 'Enter 3 for 64KB\n'
+            option = raw_input()
+            if int(option) not in possibilities:
+                print 'Invalid input.!!'
+            else:
+                while 1:
+                    print 'Enter the number of threads (Max of 2 threads is allowed.)'
+                    thr = raw_input()
+                    if int(thr) not in [1,2]:
+                        print "Invalid Input"
+                    else:
+                        break;    
+                break;    
+        print         
+        data_to_send = packet[possibilities.index(int(option))]  
+        print '\nNumber of Bytes to send: ', len(data_to_send) 
+        print 'Number of Threads used: %d \n' % int(thr) 
+        if int(thr) == 1 or int(option) == 1:
+            cli = client(data_to_send,len(data_to_send))
+            cli.start()
+            cli.join()
+        elif int(thr) == 2 and int(option) != 1:
+            mid = len(data_to_send) /2
+            cli1 = client(data_to_send[:mid],len(data_to_send)/2)
+            cli2 = client(data_to_send[mid:],len(data_to_send)/2)
+            cli1.start()
+            cli1.join()
+            cli2.start()
+            cli2.join() 
+    except Exception as e:
+        print 'Threads could not be started..!!'
+        print e.message
+                    
