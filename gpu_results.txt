@@ -1,0 +1,54 @@
+/etc/bashrc: line 91: ulimit: open files: cannot modify limit: Operation not permitted
+
+---- Running test #1 ----
+
+  ( 2) Multiprocessors, (192) CUDA Cores/MP:     384 CUDA Cores
+
+Performing integer operation on 20971520 elements . . .
+
+Max error y: 0.000000n
+Max error z: 0.000000n
+Time elapsed: 11.904480
+Performing float operation on 20971520 elements . . .
+
+Max error y: 0.000000n
+Max error z: 0.000000n
+Time elapsed: 11.910368
+---- Running test #2 ----
+
+  ( 2) Multiprocessors, (192) CUDA Cores/MP:     384 CUDA Cores
+
+Performing integer operation on 20971520 elements . . .
+
+Max error y: 0.000000n
+Max error z: 0.000000n
+Time elapsed: 11.922720
+Performing float operation on 20971520 elements . . .
+
+Max error y: 0.000000n
+Max error z: 0.000000n
+Time elapsed: 11.917920
+---- Running test #3 ----
+
+  ( 2) Multiprocessors, (192) CUDA Cores/MP:     384 CUDA Cores
+
+Performing integer operation on 20971520 elements . . .
+
+Max error y: 0.000000n
+Max error z: 0.000000n
+Time elapsed: 0.000000
+Performing float operation on 20971520 elements . . .
+
+Max error y: 15.000000n
+Max error z: 10.000000n
+Time elapsed: 0.000000
+========== SUMMARY OF GPU PERFORMANCE ============
+Tests                                    : 3
+Average time for integer operations      : 7.942400ms
+Standard deviation for integer operations: 5.616130ms
+Average integer operations per second    : 26404.512561 GIOPS
+Average time for float operations        : 7.942763ms
+Standard deviation for float operations  : 5.616382ms
+Average float operations per second      : 26403.306244 GFLOPS
+====================================================
+
