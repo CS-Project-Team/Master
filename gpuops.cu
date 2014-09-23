@@ -3,11 +3,11 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/resource.h>
-//#include <windows.h>
 
-#define N 1000
 #define INT_M 2
-#define N_TESTS 1 
+
+const int N = 20 * (1 << 20);
+
 double get_time()
 {
 	struct timeval t;
@@ -16,10 +16,8 @@ double get_time()
 	return t.tv_sec + t.tv_usec*1e-6;
 }
 
-const float CONST_FLOAT = 1.7;
-
-__global__
-void saxpy(int n, float a, float *x, float *y, float *z)
+//float operations
+__global__ void add_float(int n, float a, float *x, float *y, float *z)
 {
   int i = blockIdx.x*blockDim.x + threadIdx.x;
   if (i < n) {
@@ -31,89 +29,173 @@ void saxpy(int n, float a, float *x, float *y, float *z)
 	}
 }
 
-//TODO float operations
-__global__ void add_float(float *a, float *b, float *c ) {
-        int tid = blockIdx.x;
-        if(tid < N){
-                c[tid] = a[tid] + b[tid];
-        }
-}
-
-//TODO read operations
-__global__ void read_data() {
-}
-
-//TODO write operations
-__global__ void write_data() {
-}
-
-void speed_test_int(int n_blocks, int n_threads){
-	int a[N], b[N], c[N];
-	int *dev_a, *dev_b, *dev_c;
-	cudaMalloc( (void**)&dev_a, N * sizeof(int) );
-	cudaMalloc( (void**)&dev_b, N * sizeof(int) );
-	cudaMalloc( (void**)&dev_c, N * sizeof(int) );
-
-	for( int i=0; i <N; i++) {
-		a[i] = 2;
-		b[i] = 1;
+//int operations
+__global__ void add_int(int n, int a, int *x, int *y, int *z)
+{
+  int i = blockIdx.x*blockDim.x + threadIdx.x;
+  if (i < n) {
+	y[i] = a*x[i] + y[i];//y=4
+	z[i] = a*x[i] + z[i];//z=5
+	z[i] = a*y[i] + z[i];//z=13
+        y[i] = a*x[i] + z[i];//y=15
+        y[i] = a*x[i] + y[i];//y=17
 	}
-	cudaMemcpy( dev_a, a, N * sizeof(int), cudaMemcpyHostToDevice);
-	cudaMemcpy( dev_b, b, N * sizeof(int), cudaMemcpyHostToDevice);
-	
-	//TODO clock_t start = clock(), diff;
+}
 
-	//add_int<<<n_blocks,n_threads>>>(dev_a, dev_b, dev_c, n_blocks, INT_M);
-	//add_int<<grids,blocks,1>>(dev_a, dev_b, dev_c);
+float speed_test_int(int n_blocks, int n_cores){
+	int *x, *y, *z, *d_x, *d_y, *d_z;
+	x = (int*)malloc(N*sizeof(int));
+	y = (int*)malloc(N*sizeof(int));
+	z = (int*)malloc(N*sizeof(int));
 
-	//TODO diff = clock() - start;
-        double time = 0.0; //TODO (double) diff / (double) CLOCKS_PER_SEC;
+	cudaMalloc(&d_x, N*sizeof(int)); 
+	cudaMalloc(&d_y, N*sizeof(int));
+	cudaMalloc(&d_z, N*sizeof(int));
 
-	cudaMemcpy( c, dev_c, N * sizeof(int), cudaMemcpyDeviceToHost);
-	
-	printf("\nTime spent: %d\n", time);
-	for(int i=(N - 3); i<N; i++) {
-		printf("%d + %d = %d\n", a[i], b[i], c[i] );
+	for (int i = 0; i < N; i++) {
+		x[i] = 1;
+		y[i] = 2;
+		z[i] = 3;
 	}
 
-	cudaFree( dev_a );
-	cudaFree( dev_b );
-	cudaFree( dev_c );
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
 
+	cudaMemcpy(d_x, x, N*sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_y, y, N*sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_z, z, N*sizeof(int), cudaMemcpyHostToDevice);
+
+	cudaEventRecord(start);
+
+	printf("\nPerforming integer operation on %d elements . . .\n", N);
+	//blocks, cores
+	add_int<<<n_blocks, n_cores>>>(N, 2, d_x, d_y, d_z);
+
+	cudaEventRecord(stop);
+
+	cudaMemcpy(y, d_y, N*sizeof(int), cudaMemcpyDeviceToHost);
+	cudaMemcpy(z, d_z, N*sizeof(int), cudaMemcpyDeviceToHost);
+
+	cudaEventSynchronize(stop);
+	float mseconds = 0;
+	cudaEventElapsedTime(&mseconds, start, stop);
+
+	int maxError_y = 0;
+	int maxError_z = 0;
+	for (int i = 0; i < N; i++) {
+	maxError_y = max(maxError_y, abs(y[i]-17));
+	maxError_z = max(maxError_z, abs(z[i]-13));
+	}
+
+	cudaFree( x );
+        cudaFree( y );
+        cudaFree( z );
+
+//	printf("\nMax error y: %fn", maxError_y);
+//	printf("\nMax error z: %fn", maxError_z);
+	printf("\nTime elapsed: %f", mseconds);
+
+	return mseconds;
 }
 
-void speed_test_float(int grids, int blocks){
-        float a[N], b[N], c[N];
-        float *dev_a, *dev_b, *dev_c;
-        cudaMalloc( (void**)&dev_a, N * sizeof(float) );
-        cudaMalloc( (void**)&dev_b, N * sizeof(float) );
-        cudaMalloc( (void**)&dev_c, N * sizeof(float) );
+float speed_test_float(int n_blocks, int n_cores){
+	float *x, *y, *z, *d_x, *d_y, *d_z;
+	x = (float*)malloc(N*sizeof(float));
+	y = (float*)malloc(N*sizeof(float));
+	z = (float*)malloc(N*sizeof(float));
 
-        for( int i=0; i <N; i++) {
-                a[i] = CONST_FLOAT;
-                b[i] = (float) i;
+	cudaMalloc(&d_x, N*sizeof(float)); 
+	cudaMalloc(&d_y, N*sizeof(float));
+	cudaMalloc(&d_z, N*sizeof(float));
+
+	for (int i = 0; i < N; i++) {
+		x[i] = 1.0f;
+		y[i] = 2.0f;
+		z[i] = 3.0f;
+	}
+
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
+
+	cudaMemcpy(d_x, x, N*sizeof(float), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_y, y, N*sizeof(float), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_z, z, N*sizeof(float), cudaMemcpyHostToDevice);
+
+	cudaEventRecord(start);
+
+	printf("\nPerforming float operation on %d elements . . .\n", N);
+	//blocks, cores
+	add_float<<<n_blocks, n_cores>>>(N, 2.0f, d_x, d_y, d_z);
+
+	cudaEventRecord(stop);
+
+	cudaMemcpy(y, d_y, N*sizeof(float), cudaMemcpyDeviceToHost);
+	cudaMemcpy(z, d_z, N*sizeof(float), cudaMemcpyDeviceToHost);
+
+	cudaEventSynchronize(stop);
+	float mseconds = 0;
+	cudaEventElapsedTime(&mseconds, start, stop);
+
+	cudaFree( x );
+	cudaFree( y );
+	cudaFree( z );
+
+	float maxError_y = 0.0f;
+	float maxError_z = 0.0f;
+	for (int i = 0; i < N; i++) {
+	maxError_y = max(maxError_y, abs(y[i]-17.0f));
+	maxError_z = max(maxError_z, abs(z[i]-13.0f));
+	}
+
+//	printf("\nMax error y: %fn", maxError_y);
+//	printf("\nMax error z: %fn", maxError_z);
+	printf("\nTime elapsed: %f", mseconds);
+
+	return mseconds;
+}
+
+
+double bandwidth_test(int size){
+	int n = size;
+	
+        char *x, *d_x, *d_y;
+        x = (char*)malloc(n*sizeof(char));
+
+        cudaMalloc(&d_x, n*sizeof(char));
+        cudaMalloc(&d_y, n*sizeof(char));
+
+        for (int i = 0; i < n; i++) {
+                x[i] = 'a';
         }
-        cudaMemcpy( dev_a, a, N * sizeof(float), cudaMemcpyHostToDevice);
-        cudaMemcpy( dev_b, b, N * sizeof(float), cudaMemcpyHostToDevice);
 
-        //TODO clock_t start = clock(), diff;
+        cudaEvent_t start, stop;
+        cudaEventCreate(&start);
+        cudaEventCreate(&stop);
 
-        add_float<<<N,1>>>(dev_a, dev_b, dev_c);
-        //add_float<<grids,blocks,1>>(dev_a, dev_b, dev_c);
+        cudaMemcpy(d_x, x, n*sizeof(char), cudaMemcpyHostToDevice);
 
-        //TODO diff = clock() - start;
-        double time = 0.0; //TODO (double) diff / (double) CLOCKS_PER_SEC;
+        cudaEventRecord(start);
 
-        cudaMemcpy( c, dev_c, N * sizeof(float), cudaMemcpyDeviceToHost);
+        printf("\nRuning memory bandwidth test with %d bytes . . .\n", n);
 
-        printf("\nTime spent: %d\n", time);
-        for(int i=(N - 3); i<N; i++) {
-                printf("%f + %f = %f\n", a[i], b[i], c[i] );
-        }
+        cudaEventRecord(stop);
 
-        cudaFree( dev_a );
-        cudaFree( dev_b );
-        cudaFree( dev_c );
+        cudaMemcpy(x, d_x, n*sizeof(char), cudaMemcpyDeviceToHost);
+
+        cudaEventSynchronize(stop);
+        float mseconds = 0;
+        cudaEventElapsedTime(&mseconds, start, stop);
+
+        cudaFree( x );
+
+        printf("\nTime elapsed: %fms", mseconds);
+	
+	double bandwidth = (n / (mseconds/1000))*1e-9;
+        printf("\nBandwidth (GB/s): %f\n", bandwidth);
+
+        return bandwidth;
 }
 
 int ConvertSMVer2Cores(int major, int minor)
@@ -146,96 +228,34 @@ int ConvertSMVer2Cores(int major, int minor)
         return -1;
 }
 
-TestResult gpu_test(){
-  int Nz = 20 * (1 << 20);
-  float *x, *y, *z, *d_x, *d_y, *d_z;
-  x = (float*)malloc(Nz*sizeof(float));
-  y = (float*)malloc(Nz*sizeof(float));
-  z = (float*)malloc(Nz*sizeof(float));
-
-  cudaMalloc(&d_x, Nz*sizeof(float)); 
-  cudaMalloc(&d_y, Nz*sizeof(float));
-  cudaMalloc(&d_z, Nz*sizeof(float));
-
-  for (int i = 0; i < Nz; i++) {
-    x[i] = 1.0f;
-    y[i] = 2.0f;
-    z[i] = 3.0f;
-  }
-
-  cudaEvent_t start, stop;
-  cudaEventCreate(&start);
-  cudaEventCreate(&stop);
-
-  cudaMemcpy(d_x, x, Nz*sizeof(float), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_y, y, Nz*sizeof(float), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_z, z, Nz*sizeof(float), cudaMemcpyHostToDevice);
-
-  cudaEventRecord(start);
-
-  printf("\nPerform SAXPY on %d elements\n", Nz);
-  //saxpy<<<(Nz+511)/512, 512>>>(Nz, 2.0f, d_x, d_y);
-  saxpy<<<(Nz+511)/384, 384>>>(Nz, 2.0f, d_x, d_y, d_z);
-
-  cudaEventRecord(stop);
-
-  cudaMemcpy(y, d_y, Nz*sizeof(float), cudaMemcpyDeviceToHost);
-  cudaMemcpy(z, d_z, Nz*sizeof(float), cudaMemcpyDeviceToHost);
-
-  cudaEventSynchronize(stop);
-  float milliseconds = 0;
-  cudaEventElapsedTime(&milliseconds, start, stop);
-
-  float maxError_y = 0.0f;
-  float maxError_z = 0.0f;
-  for (int i = 0; i < Nz; i++) {
-    maxError_y = max(maxError_y, abs(y[i]-17.0f));
-    maxError_z = max(maxError_z, abs(z[i]-13.0f));
-  }
-
-  printf("\nMax error y: %fn", maxError_y);
-  printf("\nMax error z: %fn", maxError_z);
-  printf("\nTime elapsed: %f", milliseconds/1e6);
-  printf("\nEffective Bandwidth (GB/s): %f\n", Nz*4*3/milliseconds/1e6);
-
+TestResult gpu_test() {
 	TestResult result;
-        for(int i = 0; i < N_TESTS; i++) {
-                //speed_test_float(n_grids, n_blocks);
-                result.float_times[i] = 0;
-		result.int_times[i] = 0;
-        }
-
-        //bandwidth test
-        return result;
-}
-
-TestResult gpu_test_old() {
-	TestResult result;
-	double start, end;
-	//number of blocks in a grid; number of threads in a block
-	int n_blocks = 2, n_threads = 384; //384 get actual number of cores here
+	int dev =0, n_blocks = 2, n_cores = 384; //blocks per grid and threads per block
 	
-	int dev = 0;	
+	//Getting number of GPU cores	
 	cudaSetDevice(0);
         cudaDeviceProp deviceProp;
         cudaGetDeviceProperties(&deviceProp, dev);
-
+	n_blocks = deviceProp.multiProcessorCount;
+	n_cores = ConvertSMVer2Cores(deviceProp.major, deviceProp.minor) * deviceProp.multiProcessorCount;
 	printf("\n  (%2d) Multiprocessors, (%3d) CUDA Cores/MP:     %d CUDA Cores\n",
-               deviceProp.multiProcessorCount,
-               ConvertSMVer2Cores(deviceProp.major, deviceProp.minor),
-               ConvertSMVer2Cores(deviceProp.major, deviceProp.minor) * deviceProp.multiProcessorCount);	
-	for(int i = 0; i < N_TESTS; i++) {
-		start = get_time();
-		speed_test_int(n_blocks, n_threads);
-		end = get_time();
-		result.int_times[i] = end - start;
-	}
-	for(int i = 0; i < N_TESTS; i++) {
-		//speed_test_float(n_grids, n_blocks);
-                result.float_times[i] = 0;
-        }
+	        n_blocks, ConvertSMVer2Cores(deviceProp.major, deviceProp.minor),n_cores);	
+	
+	//Running tests
+	n_blocks = ceil(N+n_cores)/n_cores;	
+	
+	printf("\n----- Runing GPU speed test - integer operations -----\n");
+	result.time_int = speed_test_int(n_blocks, n_cores);	
+	printf("\n----- Runing GPU speed test - float operations -----\n");
+	result.time_float = speed_test_float((N+511)/n_cores, n_cores);
+
+	printf("\n----- Runing memory tests -----\n");
+	result.bandwidth[0] = bandwidth_test(1);
+	result.bandwidth[1] = bandwidth_test(1000);
+	result.bandwidth[2] = bandwidth_test(1000000);
 
 	//bandwidth test
 	return result;
 }
+
 

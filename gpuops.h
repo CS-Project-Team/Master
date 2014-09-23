@@ -2,8 +2,9 @@
 #define _GPUOPS_H_
 
 typedef struct TestResult {
-	double int_times[3];
-	double float_times[3];
+	double time_int;
+	double time_float;
+	double bandwidth[3];
 } TestResult;
 
 extern TestResult gpu_test();
