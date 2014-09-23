@@ -41,7 +41,7 @@ typedef struct thread{
 	double diff;	
 } ThreadData;
 
-const int MAX_SIZE = 10000000;
+#define MAX_SIZE = 10000000;
 
 void* loop_time (void *thread);
 void* write_seq_file (void *thread);
@@ -61,32 +61,21 @@ int main(int argc, char *argv[]) {
 	double latency, throughput;
 	double  avg_latency = 0, avg_throughput = 0, total_throughput = 0;	
 	ThreadData thread[nb_threads];
+	ThreadData temp;
 	ThreadData empty_loop;
-	pthread_t empty_loop_id;	
+	pthread_t temp_id;
+	pthread_t empty_loop_id;
 	int random_int;
 	int re;
 	
 	srand(time(NULL));	
-	random_int = rand()%(MAX_SIZE-blocksize);
-	
-	
+	random_int = rand()%filesize;
+
 	/* Detect mode betweem Write/Sequential, Write/Random, Read/Sequential, Read/Random */
 	index = detect_mode(mode);
 	printf("\nBLOCKSIZE : %d B\n",blocksize);
 	printf("THREADS   : %d",nb_threads);
 	printf("\n=======================================\n\n");
-
-	/* Creating blocksize if needed */
-	for(i=0; i < nb_threads; i++){
-		if(index ==2 || index == 3){
-			snprintf(filename,sizeof(filename),"temp%d",i);	
-			create_big_file(filename);
-		}
-		else{	
-			snprintf(filename,sizeof(filename),"temp%d",i);
-		}
-	}
-	sleep(1);
 
 	/* Calculating empty loop_size latency*/
 	empty_loop.blocksize = blocksize/nb_threads;
@@ -112,9 +101,11 @@ int main(int argc, char *argv[]) {
 			re = pthread_create(&(thread[i].thread_id),NULL,write_ran_file,(void *)(&thread[i]));
 			break;
 		case 2:
+			create_big_file(thread[i].filename);
 			re = pthread_create(&(thread[i].thread_id),NULL,read_seq_file,(void *)(&thread[i]));
 			break;
 		case 3:
+			create_big_file(thread[i].filename);
 			re = pthread_create(&(thread[i].thread_id),NULL,read_ran_file,(void *)(&thread[i]));
 			break;		
 		default:
@@ -210,24 +201,23 @@ void* write_seq_file(void *thread){
 void* write_ran_file(void *thread){
 	ThreadData *my_data = (ThreadData*)thread;
 	char *filename = my_data->filename;
-	FILE* fp = fopen(filename,"w+");
+	FILE* fp = fopen(filename,"r");
 	int blocksize = my_data->blocksize;
 	int random_int = my_data->random_int;
 	double start,end;
 	char c = 'a';
 	long i;
-	//Filling the file with random_int
-	for(i=0; i<random_int;i++){
+	//Filling the file with MAX_SIZE
+	for(i=0; i<MAX_SIZE;i++){
 		fputc(c,fp);	
 	}
-	rewind(fp);
 	//Timing a random addition to the file
 	start = get_time();
 	fseek(fp, random_int, SEEK_SET);
 	for (i=0; i<blocksize; i++){
-		fputc('B',fp);
+		fputc(c,fp);
 	}
-	end = get_time();
+	end = get_time()
 	fclose(fp);
 	my_data->diff = end - start;
 
@@ -258,7 +248,6 @@ void* read_ran_file(void *thread){
 	FILE* fp = fopen(filename,"r");
 	int blocksize = my_data->blocksize;
 	int random_int = my_data->random_int;
-	double start,end;	
 	long i;
 	start = get_time();
 	fseek(fp, random_int, SEEK_SET);
