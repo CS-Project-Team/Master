@@ -35,9 +35,11 @@ double get_gops(int n_threads, double time) {
 
 
 int main(int argc, char *argv[]) {
-        for(int i=0; i<N_TESTS; i++) {
+        TestResult result;
+	for(int i=0; i<N_TESTS; i++) {
                 printf("\n---- Running test #%d ----\n", i+1);
-                gpu_test();
+                result = gpu_test();
+		printf("RESULT: time = %f", result.int_times[0]);
                 //print_results(n_threads, i);
         }
 

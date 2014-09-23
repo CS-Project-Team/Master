@@ -18,16 +18,16 @@ double get_time()
 
 const float CONST_FLOAT = 1.7;
 
-__global__
-void saxpy(int n, float a, float *x, float *y, float *z)
-{
-  int i = blockIdx.x*blockDim.x + threadIdx.x;
-  if (i < n) {
-	y[i] = a*x[i] + y[i];//y=4
-	z[i] = a*x[i] + z[i];//z=5
-	z[i] = a*y[i] + z[i];//z=13
-	y[i] = a*x[i] + z[i];//y=15
-        y[i] = a*x[i] + y[i];//y=17
+__global__ void add_int(int *a, int *b, int *c, int n_blocks, int multiplier) {
+	//int tid = blockDim.x*blockIdx.x + threadIdx.x;
+	int tid = blockIdx.x;
+	if(tid < n_blocks && tid < N){
+		c[tid] = multiplier*a[tid] + b[tid];
+//		c[tid] = c[tid] - 1;
+//		b[tid] = a[tid] + c[tid];
+//		c[tid] = c[tid] + b[tid];
+//		a[tid] = a[tid] + c[tid];
+//		c[tid] = c[tid] + a[tid];
 	}
 }
 
@@ -63,7 +63,7 @@ void speed_test_int(int n_blocks, int n_threads){
 	
 	//TODO clock_t start = clock(), diff;
 
-	//add_int<<<n_blocks,n_threads>>>(dev_a, dev_b, dev_c, n_blocks, INT_M);
+	add_int<<<n_blocks,n_threads>>>(dev_a, dev_b, dev_c, n_blocks, INT_M);
 	//add_int<<grids,blocks,1>>(dev_a, dev_b, dev_c);
 
 	//TODO diff = clock() - start;
@@ -146,70 +146,8 @@ int ConvertSMVer2Cores(int major, int minor)
         return -1;
 }
 
-TestResult gpu_test(){
-  int Nz = 20 * (1 << 20);
-  float *x, *y, *z, *d_x, *d_y, *d_z;
-  x = (float*)malloc(Nz*sizeof(float));
-  y = (float*)malloc(Nz*sizeof(float));
-  z = (float*)malloc(Nz*sizeof(float));
 
-  cudaMalloc(&d_x, Nz*sizeof(float)); 
-  cudaMalloc(&d_y, Nz*sizeof(float));
-  cudaMalloc(&d_z, Nz*sizeof(float));
-
-  for (int i = 0; i < Nz; i++) {
-    x[i] = 1.0f;
-    y[i] = 2.0f;
-    z[i] = 3.0f;
-  }
-
-  cudaEvent_t start, stop;
-  cudaEventCreate(&start);
-  cudaEventCreate(&stop);
-
-  cudaMemcpy(d_x, x, Nz*sizeof(float), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_y, y, Nz*sizeof(float), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_z, z, Nz*sizeof(float), cudaMemcpyHostToDevice);
-
-  cudaEventRecord(start);
-
-  printf("\nPerform SAXPY on %d elements\n", Nz);
-  //saxpy<<<(Nz+511)/512, 512>>>(Nz, 2.0f, d_x, d_y);
-  saxpy<<<(Nz+511)/384, 384>>>(Nz, 2.0f, d_x, d_y, d_z);
-
-  cudaEventRecord(stop);
-
-  cudaMemcpy(y, d_y, Nz*sizeof(float), cudaMemcpyDeviceToHost);
-  cudaMemcpy(z, d_z, Nz*sizeof(float), cudaMemcpyDeviceToHost);
-
-  cudaEventSynchronize(stop);
-  float milliseconds = 0;
-  cudaEventElapsedTime(&milliseconds, start, stop);
-
-  float maxError_y = 0.0f;
-  float maxError_z = 0.0f;
-  for (int i = 0; i < Nz; i++) {
-    maxError_y = max(maxError_y, abs(y[i]-17.0f));
-    maxError_z = max(maxError_z, abs(z[i]-13.0f));
-  }
-
-  printf("\nMax error y: %fn", maxError_y);
-  printf("\nMax error z: %fn", maxError_z);
-  printf("\nTime elapsed: %f", milliseconds/1e6);
-  printf("\nEffective Bandwidth (GB/s): %f\n", Nz*4*3/milliseconds/1e6);
-
-	TestResult result;
-        for(int i = 0; i < N_TESTS; i++) {
-                //speed_test_float(n_grids, n_blocks);
-                result.float_times[i] = 0;
-		result.int_times[i] = 0;
-        }
-
-        //bandwidth test
-        return result;
-}
-
-TestResult gpu_test_old() {
+TestResult gpu_test() {
 	TestResult result;
 	double start, end;
 	//number of blocks in a grid; number of threads in a block
