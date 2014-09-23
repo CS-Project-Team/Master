@@ -7,9 +7,9 @@
 
 const float CONST_FLOAT = 1.7;
 
-__global__ void add_int(int *a, int *b, int *c ) {
+__global__ void add_int(int *a, int *b, int *c, int n_blocks) {
 	int tid = blockIdx.x;
-	if(tid < N){
+	if(tid < n_blocks && tid < N){
 		c[tid] = a[tid] + b[tid];
 	}
 }
@@ -30,7 +30,7 @@ __global__ void read_data() {
 __global__ void write_data() {
 }
 
-void speed_test_int(int grids, int blocks){
+void speed_test_int(int n_blocks, int n_threads){
 	int a[N], b[N], c[N];
 	int *dev_a, *dev_b, *dev_c;
 	cudaMalloc( (void**)&dev_a, N * sizeof(int) );
@@ -46,7 +46,7 @@ void speed_test_int(int grids, int blocks){
 	
 	//TODO clock_t start = clock(), diff;
 
-	add_int<<<N,1>>>(dev_a, dev_b, dev_c);
+	add_int<<<n_blocks,n_threads>>>(dev_a, dev_b, dev_c, n_blocks);
 	//add_int<<grids,blocks,1>>(dev_a, dev_b, dev_c);
 
 	//TODO diff = clock() - start;
@@ -133,7 +133,7 @@ int ConvertSMVer2Cores(int major, int minor)
 
 TestResult gpu_test() {
 	TestResult result;
-	int n_blocks = 1, n_grids = 1; //get actual number of cores here
+	int n_blocks = 2, n_threads = 384; //get actual number of cores here
 	
 	int dev = 0;	
 	cudaSetDevice(0);
@@ -145,7 +145,7 @@ TestResult gpu_test() {
                ConvertSMVer2Cores(deviceProp.major, deviceProp.minor),
                ConvertSMVer2Cores(deviceProp.major, deviceProp.minor) * deviceProp.multiProcessorCount);	
 	for(int i = 0; i < N_TESTS; i++) {
-		speed_test_int(n_grids, n_blocks);
+		speed_test_int(n_blocks, n_threads);
 		result.int_times[i] = 0;
 	}
 	for(int i = 0; i < N_TESTS; i++) {
