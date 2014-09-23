@@ -4,7 +4,8 @@
 #include <pthread.h>
 #include <iostream>
 
-const long unsigned int N = 1000;
+#define N 1000
+
 const int N_TESTS = 3;
 const float CONST_FLOAT = 0.7;
 
@@ -15,7 +16,6 @@ double time_float[] = {0.0, 0.0, 0.0};
 //Performs N^3 operations
 void *integer_op(void *threadid){
 	int A[N][N];
-
 	for(int i=0;i<N;i++)
         {
         	for(int j=0;j<N;j++)
@@ -24,6 +24,16 @@ void *integer_op(void *threadid){
 			for(int k = 0; k < N; k++)
 			{
                         	A[i][j]++;
+				A[j][i]++;
+                        	A[i][j]++;
+				A[j][i]++;
+				A[i][j]++;
+
+                                A[j][i]++;
+                                A[i][j]++;
+                                A[j][i]++;
+                                A[i][j]++;
+                                A[j][i]++;
 			}
                 }
         }
@@ -41,6 +51,16 @@ void *float_op(void *threadid){
 			for(int k = 0; k < N; k++)
 			{
                         	A[i][j]+=CONST_FLOAT;
+                        	A[j][i]+=CONST_FLOAT;
+                        	A[i][j]+=CONST_FLOAT;
+                        	A[j][i]+=CONST_FLOAT;
+                        	A[i][j]+=CONST_FLOAT;
+				
+				A[i][j]+=CONST_FLOAT;
+                                A[j][i]+=CONST_FLOAT;
+                                A[i][j]+=CONST_FLOAT;
+                                A[j][i]+=CONST_FLOAT;
+                                A[i][j]+=CONST_FLOAT;
 			}
                 }
         }
@@ -64,7 +84,7 @@ void cpu_test(int n_threads, int test_number){
     	}
 	diff = clock() - start;
 	time_int[test_number] = (double) diff / (double) CLOCKS_PER_SEC;
-
+	
 	//FLOAT OPERATIONS
 	start = clock();
     	for (i=0; i<n_threads; i++){
@@ -95,7 +115,8 @@ float stand_deviation(double values[3], float average ){
 }
 
 double get_gops(int n_threads, double time) {	
-	return (pow(N,3)/pow(10,9))*(n_threads/time);
+	unsigned long int n = N;
+	return (pow(n,3)/pow(10,9))*(n_threads/time)*10;
 }
 
 //Print results for n operations
