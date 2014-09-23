@@ -89,7 +89,12 @@ int main(int argc, char *argv[]) {
 	sleep(1);
 
 	/* Calculating empty loop_size latency*/
-	empty_loop.blocksize = blocksize/nb_threads;
+	if(blocksize != 1){
+		empty_loop.blocksize = blocksize/nb_threads;
+	}
+	else{
+		empty_loop.blocksize = blocksize;
+	}
 	empty_loop.diff = 0;
 	pthread_create(&empty_loop_id,NULL,loop_time,(void *) argv);
 	pthread_join(empty_loop_id, NULL);
@@ -99,7 +104,12 @@ int main(int argc, char *argv[]) {
 		/* Updating thread[i] structure */
 		snprintf(filename,sizeof(filename),"temp%d",i);
 		strncpy(thread[i].filename,filename,sizeof(filename));
-		thread[i].blocksize = blocksize/nb_threads;
+		if(blocksize != 1){
+			thread[i].blocksize = blocksize/nb_threads;
+		}
+		else{
+			thread[i].blocksize = blocksize;
+		}
 		thread[i].random_int = random_int;
 		thread[i].diff = 0;
 
@@ -154,7 +164,7 @@ int main(int argc, char *argv[]) {
 	avg_throughput = total_throughput/nb_threads;	
 	printf("---------------------------------------\n");
 	printf("Average latency     : %.5f ms\n", (avg_latency*1000));
-	printf("Average throughput  : %.5f ms\n", avg_throughput);
+	printf("Average throughput  : %.5f MB/s\n", avg_throughput);
 	printf("Total throughput    : %.2f MB/s", total_throughput);
 	printf("\n---------------------------------------\n");
 
