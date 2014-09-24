@@ -1,15 +1,89 @@
 NOW=$(date +"%m-%d-%Y.%H.%M.%S")
-REPORT_FILE="report."$NOW".txt"
+TIME="5 4 3 2 1"
+REPORT_FILE_CPU="report_CPU."$NOW".txt"
+REPORT_FILE_GPU="report_GPU."$NOW".txt"
+REPORT_FILE_MEMORY="report_MEMORY."$NOW".txt"
+REPORT_FILE_DISK="report_DISK."$NOW".txt"
+
 NB_THREADS="1 2 4"
 BLOCKSIZE="1 1000 1000000"
+BLOCKSIZE_MEM="1 1000 999999"
 MODE="ws wr rs rr"
+MODE_MEM="s r"
 
 echo ""
-echo "======= DISK BENCHMARKING ======="
+echo "==================================================================================================="
+echo "BENCHMARKING PROGRAM "
+echo "	This shell script will automatically benchmark your CPU, GPU, MEMORY, DISK and NETWORK."
+echo "	A report file for each component will be generated, under the form report_COMPONENT.TIME"
+echo "	THIS MIGHT TAKE A WHILE. You can grab a coffee and watch the news."
+echo "==================================================================================================="
 echo ""
-echo "Compiling files ..."
-gcc -pthread disk.c -o disk
+for i in $TIME; do
+	echo "Starting in $i"
+	sleep 1	
+done
+echo ""
+echo "Starting ..."
+sleep 2
+echo ""
+echo ""
+echo "Removing previous remaining temp files and reports ..."
+rm temp* report_* 2> errors.txt
+
 echo "done."
+echo ""
+
+echo "Compiling all files ..."
+	make -f make_cpu
+	gcc -pthread memory.c -o memory
+	gcc -pthread disk.c -o disk
+echo "done."
+echo ""
+
+
+echo "======= CPU BENCHMARKING ======"
+echo""
+echo ""
+for threads in $NB_THREADS; do
+	echo "Number of threads : $threads"
+	./cpu $threads >> $REPORT_FILE_CPU
+echo "done."
+done
+echo "CPU benchmarking ended successfullyi, file $REPORT_FILE_CPU generated"
+
+sleep 1
+
+echo ""
+echo "======= MEMORY BENCHMARKING ======="
+echo ""
+
+echo ""
+echo "Benchmarking ..."
+echo ""
+for mode in $MODE_MEM; do
+	echo "Mode: $mode_mem"
+	for blocksize in $BLOCKSIZE_MEM; do
+		echo "    Blocksize: $blocksize Bytes";
+		for threads in $NB_THREADS; do
+			echo "     Number of threads: $threads"
+			sleep 2 
+			./memory $mode $blocksize $threads >> $REPORT_FILE_MEMORY
+		done
+		echo "     done."
+	done
+	echo "    done."
+done
+echo ""
+echo "Removing temporary files ..."
+echo "done."
+echo ""
+echo "Memory benchmarking ended successfully."
+echo ""
+
+sleep 1
+
+echo "======= DISK BENCHMARKING ======="
 echo ""
 echo "Benchmarking ..."
 echo ""
@@ -20,7 +94,7 @@ for mode in $MODE; do
 		for threads in $NB_THREADS; do
 			echo "     Number of threads: $threads"
 			sleep 2 
-			./disk $mode $blocksize $threads >> $REPORT_FILE
+			./disk $mode $blocksize $threads >> $REPORT_FILE_DISK
 			rm temp*
 		done
 		echo "     done."
@@ -31,12 +105,20 @@ echo ""
 echo "Removing temporary files ..."
 echo "done."
 echo ""
-echo "Disk Benchmarking ended successfully."
-read -p "Do you want to open report file $REPORT_FILE ? y/n " response
-if [ "$response" == "y" ]; then
-	gedit $REPORT_FILE
-else
-	echo "End of program."
-fi
+echo "Disk benchmarking ended successfully, file $REPORT_FILE_DISK"
+
+sleep 1
+
+echo "Deleting remaining files ..."
+rm error.txt memory disk cpu
+
+echo "======= NETWORK BENCHMARKING ======="
+echo ""
+echo "Benchmarking ..."
+echo ""
+echo "PLEASE OPEN A NEW TERMINAL AND RUN python client.py FROM THE CURRENT DIRECTORY ..."
+echo ""
+	python server.py
+echo ""
 echo ""
 

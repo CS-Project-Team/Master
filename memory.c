@@ -41,7 +41,7 @@ typedef struct thread{
 	double diff;	
 } ThreadData;
 
-const int MAX_SIZE = 1000000;
+#define MAX_SIZE 1000000
 char IO_BUFFER[MAX_SIZE];
 
 void fill_io_buffer();
@@ -68,8 +68,8 @@ int main(int argc, char *argv[]) {
 	srand(time(NULL));	
 	random_int = rand()%(MAX_SIZE-blocksize);
 	
-    /* Fill the buffer where read and write buffer is to be tested */
-    fill_io_buffer();
+	/* Fill the buffer where read and write buffer is to be tested */
+  	 fill_io_buffer();
     	
 	/* Detect mode betweem Sequential, Random */
 	index = detect_mode(mode);
@@ -122,7 +122,6 @@ int main(int argc, char *argv[]) {
 	/* Calculating and printing  throughput and latency for each thread */
 	for(i=0; i < nb_threads; i++){
 		latency = ((thread[i].diff)-empty_loop.diff); //We substract the empty loop latency
-        printf("Latency : %f\n",latency);
 		throughput = ((thread[i].blocksize/1000000.0)/(latency));
 		avg_latency +=latency;	
 		total_throughput += throughput;
@@ -163,10 +162,10 @@ void* read_write_seq_memory(void *thread){
 	ThreadData *my_data = (ThreadData*)thread;
 	int blocksize = my_data->blocksize;
 	double start,end;
-    char write_to_buffer[blocksize];
+   	char write_to_buffer[blocksize];
 
 	start = get_time();
-    memcpy(write_to_buffer,IO_BUFFER,blocksize);
+   	memcpy(write_to_buffer,IO_BUFFER,blocksize);
 	end = get_time();
 	my_data->diff = end - start;
 	pthread_exit(NULL);
@@ -177,17 +176,17 @@ void* read_write_ran_memory(void *thread){
 	int blocksize = my_data->blocksize;
 	int random_int = my_data->random_int;
 	double start,end;
-    int start_pos = 0;
-    char write_to_buffer[blocksize];
+  	int start_pos = 0;
+   	char write_to_buffer[blocksize];
 
-    start_pos = random_int;
-    if((start_pos + blocksize) > sizeof(IO_BUFFER) ) {
-        start_pos = sizeof(IO_BUFFER) - blocksize;
-        start_pos--;
-    }
+  	start_pos = random_int;
+  	if((start_pos + blocksize) > sizeof(IO_BUFFER) ) {
+        	start_pos = sizeof(IO_BUFFER) - blocksize;
+       		start_pos--;
+   	}
         
 	start = get_time();
-    memcpy(write_to_buffer,IO_BUFFER + start_pos,blocksize);
+   	memcpy(write_to_buffer,IO_BUFFER + start_pos,blocksize);
 	end = get_time();
 	my_data->diff = end - start;
 
