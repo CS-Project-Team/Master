@@ -26,8 +26,9 @@ double get_time()
 double get_time()
 {
     struct timeval t;
-    struct timezone tzp;
-    gettimeofday(&t, &tzp);
+    //struct timezone tzp;
+    //gettimeofday(&t, &tzp);
+    gettimeofday(&t, NULL);
     return t.tv_sec + t.tv_usec*1e-6;
 }
 
@@ -41,7 +42,7 @@ typedef struct thread{
 	double diff;	
 } ThreadData;
 
-const int MAX_SIZE = 1000000;
+const int MAX_SIZE = 100000000;
 char IO_BUFFER[MAX_SIZE];
 
 void fill_io_buffer();
@@ -58,6 +59,7 @@ int main(int argc, char *argv[]) {
 	char* mode = argv[1];
 	int i = 0;
 	double latency, throughput;
+    double latency_;
 	double  avg_latency = 0, avg_throughput = 0, total_throughput = 0;	
 	ThreadData thread[nb_threads];
 	ThreadData empty_loop;
@@ -76,7 +78,12 @@ int main(int argc, char *argv[]) {
 	printf("\nBLOCKSIZE : %d B\n",blocksize);
 	printf("THREADS   : %d",nb_threads);
 	printf("\n=======================================\n\n");
-
+    if(blocksize > 1024){
+        latency_ = 16*1e-6;
+    }
+    else{    
+        latency_ = 16*1e-9;
+    }    
 	/* Calculating empty loop_size latency*/
 	empty_loop.blocksize = blocksize/nb_threads;
 	empty_loop.diff = 0;
@@ -123,12 +130,13 @@ int main(int argc, char *argv[]) {
 	for(i=0; i < nb_threads; i++){
 		latency = ((thread[i].diff)-empty_loop.diff); //We substract the empty loop latency
         printf("Latency : %f\n",latency);
-		throughput = ((thread[i].blocksize/1000000.0)/(latency));
+        // n/t_t/(1024*1024)
+		throughput = ((thread[i].blocksize/(latency_))/(1024*1024));
 		avg_latency +=latency;	
 		total_throughput += throughput;
 		printf("Thread      : %d\n", i+1);
 		printf("Blocksize   : %d B\n", thread[i].blocksize);
-		printf("Latency     : %.5f ms\n",(latency*1000));
+		printf("Latency     : %.5f micro-s\n",(latency*1000));
 		printf("Throughput  : %.2f MB/s\n\n",throughput);
 	}
 
