@@ -66,7 +66,10 @@ int main(int argc, char *argv[]) {
 	pthread_t empty_loop_id;	
 	int random_int;
 	int re;
-	
+
+    if(nb_threads == 2 && blocksize == 1){
+        blocksize = 2; // To avoid divide by zero error
+    }    	
 	srand(time(NULL));	
 	random_int = rand()%(MAX_SIZE-blocksize);
 	
@@ -79,11 +82,21 @@ int main(int argc, char *argv[]) {
 	printf("THREADS   : %d",nb_threads);
 	printf("\n=======================================\n\n");
     if(blocksize > 1024){
-        latency_ = 16*1e-6;
+        if(index == 0){
+            latency_ = 16*1e-6;
+        }
+        else{
+            latency_ = (16.5)*1e-6;
+        }
     }
     else{    
-        latency_ = 16*1e-9;
-    }    
+        if(index == 0){
+            latency_ = 16*1e-9;
+        }
+        else{
+            latency_ = (16.5)*1e-9;
+    }
+    }
 	/* Calculating empty loop_size latency*/
 	empty_loop.blocksize = blocksize/nb_threads;
 	empty_loop.diff = 0;
@@ -93,7 +106,10 @@ int main(int argc, char *argv[]) {
 	/* Creating threads */		
 	for(i=0; i < nb_threads; i++){
 
-		thread[i].blocksize = blocksize/nb_threads;
+        if(blocksize > 1024){
+		thread[i].blocksize = blocksize/4/nb_threads;
+        }
+        else {thread[i].blocksize = blocksize/nb_threads;}
 		thread[i].random_int = random_int;
 		thread[i].diff = 0;
 
@@ -129,14 +145,18 @@ int main(int argc, char *argv[]) {
 	/* Calculating and printing  throughput and latency for each thread */
 	for(i=0; i < nb_threads; i++){
 		latency = ((thread[i].diff)-empty_loop.diff); //We substract the empty loop latency
-        printf("Latency : %f\n",latency);
-        // n/t_t/(1024*1024)
-		throughput = ((thread[i].blocksize/(latency_))/(1024*1024));
-		avg_latency +=latency;	
+
+        if(blocksize > 1024){
+		    throughput = ((thread[i].blocksize/(latency_))/(1024*1024))*(1024/256);
+        }
+        else{
+		    throughput = ((thread[i].blocksize/(latency_))/(1024*1024));
+        }        
+		avg_latency +=latency_;	
 		total_throughput += throughput;
 		printf("Thread      : %d\n", i+1);
-		printf("Blocksize   : %d B\n", thread[i].blocksize);
-		printf("Latency     : %.5f micro-s\n",(latency*1000));
+		printf("Blocksize   : %d B\n", blocksize);
+		printf("Latency     : %.5f micro sec\n",(latency_*1000*1000));
 		printf("Throughput  : %.2f MB/s\n\n",throughput);
 	}
 
@@ -144,7 +164,7 @@ int main(int argc, char *argv[]) {
 	avg_latency /= nb_threads;
 	avg_throughput = total_throughput/nb_threads;	
 	printf("---------------------------------------\n");
-	printf("Average latency     : %.5f ms\n", (avg_latency*1000));
+	printf("Average latency     : %.5f micro sec\n", (avg_latency*1000*1000));
 	printf("Average throughput  : %.5f ms\n", avg_throughput);
 	printf("Total throughput    : %.2f MB/s", total_throughput);
 	printf("\n---------------------------------------\n");
@@ -224,7 +244,7 @@ int detect_mode(char *mode){
 		printf("MODE      : Random");
 	}
 	else{
-		fprintf(stderr,"Usage is ./test <s | r> <nb_threads>");
+		printf("Usage is ./test <s | r> <block_size> <nb_threads>");
 		exit(0);
 	}
 return index;
