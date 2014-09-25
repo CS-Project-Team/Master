@@ -42,6 +42,11 @@ __global__ void add_int(int n, int a, int *x, int *y, int *z)
 	}
 }
 
+//int operations
+__global__ void mem(char  *y, char *z)
+{
+}
+
 float speed_test_int(int n_blocks, int n_cores){
 	int *x, *y, *z, *d_x, *d_y, *d_z;
 	x = (int*)malloc(N*sizeof(int));
@@ -157,7 +162,7 @@ float speed_test_float(int n_blocks, int n_cores){
 }
 
 
-double bandwidth_test(int size){
+double bandwidth_test(int n_blocks, int n_cores, int size){
 	int n = size;
 	
         char *x, *d_x, *d_y;
@@ -179,6 +184,7 @@ double bandwidth_test(int size){
         cudaEventRecord(start);
 
         printf("\nRuning memory bandwidth test with %d bytes . . .\n", n);
+	mem<<<n_blocks, n_cores>>>(d_x, d_y);
 
         cudaEventRecord(stop);
 
@@ -250,9 +256,9 @@ TestResult gpu_test() {
 	result.time_float = speed_test_float((N+511)/n_cores, n_cores);
 
 	printf("\n----- Runing memory tests -----\n");
-	result.bandwidth[0] = bandwidth_test(1);
-	result.bandwidth[1] = bandwidth_test(1000);
-	result.bandwidth[2] = bandwidth_test(1000000);
+	result.bandwidth[0] = bandwidth_test(n_blocks, n_cores, 1);
+	result.bandwidth[1] = bandwidth_test(n_blocks, n_cores, 1000);
+	result.bandwidth[2] = bandwidth_test(n_blocks, n_cores, 1000000);
 
 	//bandwidth test
 	return result;
